@@ -1,7 +1,3 @@
-namespace SpriteKind {
-    export const Scenery = SpriteKind.create()
-    export const Shadow = SpriteKind.create()
-}
 function extSetInitialCredits (num: number) {
     initCredits = num
 }
