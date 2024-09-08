@@ -1,5 +1,25 @@
 namespace SpriteKind {
     export const Scenery = SpriteKind.create()
+    export const Shadow = SpriteKind.create()
+}
+function extSetInitialCredits (num: number) {
+    initCredits = num
+}
+function startNewDay () {
+    day += 1
+    extSetupDay(day)
+    if (day > 3) {
+        game.setGameOverEffect(true, effects.confetti)
+        game.gameOver(true)
+    } else if (day == 3) {
+        game.showLongText("Now, you can buy a larger solar panel for 2 credits!\\n \\nPress B to switch sizes.", DialogLayout.Full)
+    }
+    if (day == 1) {
+        game.showLongText("Press A to place a solar panel to catch sunlight!\\n \\nYou have 5 credits to place 5 panels.\\n \\nHow much sunlight can you catch in 3 days?", DialogLayout.Full)
+    } else {
+        game.showLongText("Day " + day + "\\n \\nYou collected enough sunlight for " + info.life() + " more credits.", DialogLayout.Full)
+    }
+    extStartDay()
 }
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Food, function (sprite, otherSprite) {
     sprites.destroy(sprite)
@@ -25,40 +45,78 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         info.changeLifeBy(-2)
     }
 })
+function extMoveSun (theSun: Sprite) {
+    ticks = (game.runtime() - runtimeStart) / 100
+    sunX = 160 - 2 * ticks / 3
+    sunY = 7 * (sunX * sunX) / 640 - 7 * sunX / 4 + 70
+    theSun.setPosition(sunX, sunY)
+}
+function extAttachShadowToPlayer (shadow: Sprite, player2: Sprite) {
+	
+}
 info.onCountdownEnd(function () {
-    day += 1
-    info.setLife(Math.idiv(info.score() - yesterdayScore, 10))
-    yesterdayScore = info.score()
-    runtimeStart = game.runtime()
-    if (day > 3) {
-        game.setGameOverEffect(true, effects.confetti)
-        game.gameOver(true)
-    } else if (day == 3) {
-        game.showLongText("Now, you can buy a larger solar panel for 2 credits!\\n \\nPress B to switch sizes.", DialogLayout.Full)
-    }
-    game.showLongText("Day " + day + "\\n \\nYou collected enough sunlight for " + info.life() + " more credits.", DialogLayout.Full)
-    info.startCountdown(24)
+    startNewDay()
 })
+function extIsSunlightMade () {
+    deltaX = Math.abs(sunX - 80)
+    chance = 90 * (80 - deltaX) / 80 + 10
+    if (Math.percentChance(chance)) {
+        return true
+    } else {
+        return false
+    }
+}
 info.onLifeZero(function () {
 	
 })
+function extSetupDay (theDay: number) {
+    if (theDay == 1) {
+        info.setLife(initCredits)
+    } else {
+        info.setLife(Math.idiv(info.score() - yesterdayScore, 10))
+    }
+    yesterdayScore = info.score()
+}
+function extStartDay () {
+    runtimeStart = game.runtime()
+    info.startCountdown(24)
+}
 let sunlightSprite: Sprite = null
+let yesterdayScore = 0
 let chance = 0
+let deltaX = 0
 let sunY = 0
 let sunX = 0
-let deltaX = 0
+let runtimeStart = 0
 let ticks = 0
 let projectile: Sprite = null
-let runtimeStart = 0
-let yesterdayScore = 0
+let initCredits = 0
 let day = 0
 let placerSprite: Sprite = null
-game.showLongText("Press A to place a solar panel to catch sunlight!\\n \\nYou have 5 credits to place 5 panels.\\n \\nHow much sunlight can you catch in 3 days?", DialogLayout.Full)
 info.setScore(0)
 info.setLife(5)
-placerSprite = sprites.create(assets.image`smallPlacer`, SpriteKind.Player)
-controller.moveSprite(placerSprite)
-placerSprite.setStayInScreen(true)
+extSetInitialCredits(5)
+let heroSprite = sprites.create(img`
+    . . . . . . . f f f f f . . . . 
+    . . . . . . f e e e e e f . . . 
+    . . . . . f e e e d d d d f . . 
+    . . . . f f e e d f d d f d c . 
+    . . . f d d e e d f d d f d c . 
+    . . . c d b e e d d d d e e d c 
+    f f . c d b e e d d c d d d d c 
+    f e f . c f e e d d d c c c c c 
+    f e f . . f f e e d d d d d f . 
+    f e f . f e e e e f f f f f . . 
+    f e f f e e e e e e e f . . . . 
+    . f f e e e e f e f f e f . . . 
+    . . f e e e e f e f f e f . . . 
+    . . . f e f f b d f b d f . . . 
+    . . . f d b b d d c d d f . . . 
+    . . . f f f f f f f f f . . . . 
+    `, SpriteKind.Player)
+controller.moveSprite(heroSprite)
+heroSprite.setStayInScreen(true)
+placerSprite = sprites.create(assets.image`smallPlacer`, SpriteKind.Shadow)
 let lawnSprite = sprites.create(img`
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
     7777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777
@@ -127,19 +185,16 @@ lawnSprite.z = -1
 let sunSprite = sprites.create(assets.image`sun`, SpriteKind.Scenery)
 sunSprite.setPosition(80, 150)
 sunSprite.z = -2
-info.startCountdown(24)
-day = 1
-yesterdayScore = 0
-runtimeStart = game.runtime()
 scene.setBackgroundColor(9)
+day = 0
+startNewDay()
+game.onUpdate(function () {
+    placerSprite.x = heroSprite.right
+    placerSprite.y = heroSprite.top
+})
 game.onUpdateInterval(100, function () {
-    ticks = (game.runtime() - runtimeStart) / 100
-    deltaX = Math.abs(sunX - 80)
-    sunX = 160 - 2 * ticks / 3
-    sunY = 7 * (sunX * sunX) / 640 - 7 * sunX / 4 + 70
-    sunSprite.setPosition(sunX, sunY)
-    chance = 90 * (80 - deltaX) / 80 + 10
-    if (Math.percentChance(chance)) {
+    extMoveSun(sunSprite)
+    if (extIsSunlightMade()) {
         sunlightSprite = sprites.createProjectileFromSprite(assets.image`sunlight`, sunSprite, 0, 100)
         sunlightSprite.x += 8 - randint(0, 16)
     }
