@@ -3,6 +3,10 @@ namespace SpriteKind {
     export const Shadow = SpriteKind.create()
 }
 
+info.onLifeZero(function () {
+
+})
+
 //% weight=100 color=#0fbc11 icon=""
 namespace Solar {
     let initCredits = 0
