@@ -1,3 +1,15 @@
+namespace SpriteKind {
+    export const Scenery = SpriteKind.create()
+    export const Shadow = SpriteKind.create()
+    export const SolarPanel = SpriteKind.create()
+    export const Sunlight = SpriteKind.create()
+    export const Cloud = SpriteKind.create()
+    export const ReducedSunlight = SpriteKind.create()
+}
+sprites.onOverlap(SpriteKind.Sunlight, SpriteKind.SolarPanel, function (sprite, otherSprite) {
+    sprites.destroy(sprite)
+    info.changeScoreBy(1)
+})
 function startNewDay () {
     day += 1
     if (day > 3) {
@@ -13,11 +25,10 @@ function startNewDay () {
         game.showLongText("Day " + day + "\\n \\nYou collected enough sunlight for " + info.life() + " more credits.", DialogLayout.Full)
     }
     Solar.startDay()
+    for (let index = 0; index < day; index++) {
+        Solar.addCloud()
+    }
 }
-sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Food, function (sprite, otherSprite) {
-    sprites.destroy(sprite)
-    info.changeScoreBy(1)
-})
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if (day == 3) {
         if (placerSprite.image.equals(assets.image`smallPlacer`)) {
@@ -30,16 +41,28 @@ controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (info.life() > 0 && placerSprite.image.equals(assets.image`smallPlacer`)) {
         projectile = sprites.createProjectileFromSprite(assets.image`smallPanel`, placerSprite, 0, 0)
-        projectile.setKind(SpriteKind.Food)
+        projectile.setKind(SpriteKind.SolarPanel)
         info.changeLifeBy(-1)
     } else if (info.life() > 1 && placerSprite.image.equals(assets.image`largePlacer`)) {
         projectile = sprites.createProjectileFromSprite(assets.image`largePanel`, placerSprite, 0, 0)
-        projectile.setKind(SpriteKind.Food)
+        projectile.setKind(SpriteKind.SolarPanel)
         info.changeLifeBy(-2)
     }
 })
 info.onCountdownEnd(function () {
     startNewDay()
+})
+sprites.onOverlap(SpriteKind.ReducedSunlight, SpriteKind.SolarPanel, function (sprite, otherSprite) {
+    sprites.destroy(sprite)
+    info.changeScoreBy(1)
+})
+sprites.onOverlap(SpriteKind.Sunlight, SpriteKind.Cloud, function (sprite, otherSprite) {
+    if (Math.percentChance(50)) {
+        sprites.destroy(sprite)
+    } else {
+        sprite.setKind(SpriteKind.ReducedSunlight)
+        sprite.setImage(assets.image`reducedSunlight`)
+    }
 })
 let sunlightSprite: Sprite = null
 let projectile: Sprite = null
@@ -146,5 +169,6 @@ game.onUpdateInterval(100, function () {
     if (Solar.isSunlightMade()) {
         sunlightSprite = sprites.createProjectileFromSprite(assets.image`sunlight`, sunSprite, 0, 100)
         sunlightSprite.x += 8 - randint(0, 16)
+        sunlightSprite.setKind(SpriteKind.Sunlight)
     }
 })

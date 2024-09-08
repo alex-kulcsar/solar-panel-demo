@@ -29,6 +29,16 @@
         "mimeType": "image/x-mkcd-f4",
         "displayName": "sun"
     },
+    "image7": {
+        "data": "hwQQAAgAAAAAAMAMwAAcwRzMEcEcERHBHBERwRwREcEcERHBHBERwRwREcEcERHBHBERwRwREcEcERHBHBERDMARwQAAzAwA",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "cloud"
+    },
+    "image8": {
+        "data": "hwQBAAQAAABERAAA",
+        "mimeType": "image/x-mkcd-f4",
+        "displayName": "reducedSunlight"
+    },
     "*": {
         "mimeType": "image/x-mkcd-f4",
         "dataEncoding": "base64",

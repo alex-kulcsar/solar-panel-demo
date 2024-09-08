@@ -1,8 +1,3 @@
-namespace SpriteKind {
-    export const Scenery = SpriteKind.create()
-    export const Shadow = SpriteKind.create()
-}
-
 info.onLifeZero(function () {
 
 })
@@ -62,5 +57,16 @@ namespace Solar {
     export function startDay() {
         runtimeStart = game.runtime()
         info.startCountdown(24)
+    }
+
+    //% block
+    export function addCloud() {
+        timer.background(function() {
+            pause(randint(1000, 12000))
+            let cloud: Sprite = sprites.create(assets.image`cloud`, SpriteKind.Cloud)
+            cloud.left = 160
+            cloud.y = randint(20, 50)
+            cloud.vx = -100
+        })
     }
 }
