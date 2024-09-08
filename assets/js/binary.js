@@ -1,4 +1,4 @@
-// meta={"simUrl":"https://trg-arcade.userpxt.io/v1.12.56/---simulator","cdnUrl":"https://pxt.azureedge.net","version":"1.1.2","target":"arcade","targetVersion":"1.12.56","repo":"alex-kulcsar/solar-panel-demo"}
+// meta={"simUrl":"https://trg-arcade.userpxt.io/v1.12.56/---simulator","cdnUrl":"https://pxt.azureedge.net","version":"1.1.3","target":"arcade","targetVersion":"1.12.56","repo":"alex-kulcsar/solar-panel-demo"}
 // total=1847732 new=6.79% cached=88.25% other=4.96%
 (function (ectx) {
 'use strict';
@@ -541,7 +541,7 @@ const pxsim_pxtrt = pxsim.pxtrt;
 const pxsim_numops = pxsim.numops;
 
 
-function _main___P141421(s) {
+function _main___P141771(s) {
 let r0 = s.r0, step = s.pc;
 s.pc = -1;
 
@@ -1166,13 +1166,13 @@ switch (step) {
     return leave(s, r0)
   default: oops()
 } } }
-_main___P141421.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
-_main___P141421.continuations = [  ]
+_main___P141771.info = {"start":0,"length":0,"line":0,"column":0,"endLine":0,"endColumn":0,"fileName":"main.ts","functionName":"<main>","argumentNames":[]}
+_main___P141771.continuations = [  ]
 
-function _main___P141421_mk(s) {
+function _main___P141771_mk(s) {
     checkStack(s.depth);
     return {
-        parent: s, fn: _main___P141421, depth: s.depth + 1,
+        parent: s, fn: _main___P141771, depth: s.depth + 1,
         pc: 0, retval: undefined, r0: undefined, overwrittenPC: false, lambdaArgs: null,
   tmp_0: undefined,
   tmp_1: undefined,
@@ -62118,5 +62118,5 @@ const sprites_BaseSpriteSayRenderer__C107828_VT = mkVTable({
 
 const breakpoints = setupDebugger(1, ["transparency16___111665","Scenery___133231","Shadow___133234","day___141103","placerSprite___141164","projectile___141191","heroSprite___141233","lawnSprite___141251","sunSprite___141265","sunlightSprite___141228","sunX___133243","ticks___133241","runtimeStart___133249","sunY___133245","initCredits___133239","yesterdayScore___133247"])
 
-return _main___P141421
+return _main___P141771
 })
