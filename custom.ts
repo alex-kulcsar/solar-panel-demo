@@ -48,7 +48,7 @@ namespace Solar {
         if (theDay == 1) {
             info.setLife(initCredits)
         } else {
-            info.setLife(Math.idiv(info.score() - yesterdayScore, 10))
+            info.changeLifeBy(Math.idiv(info.score() - yesterdayScore, 10))
         }
         yesterdayScore = info.score()
     }

@@ -22,7 +22,7 @@ function startNewDay () {
     if (day == 1) {
         game.showLongText("Press A to place a solar panel to catch sunlight!\\n \\nYou have 5 credits to place 5 panels.\\n \\nHow much sunlight can you catch in 3 days?", DialogLayout.Full)
     } else {
-        game.showLongText("Day " + day + "\\n \\nYou collected enough sunlight for " + info.life() + " more credits.", DialogLayout.Full)
+        game.showLongText("Day " + day + "\\n \\nYou collected enough sunlight to have " + info.life() + " credits.", DialogLayout.Full)
     }
     Solar.startDay()
     for (let index = 0; index < day; index++) {
