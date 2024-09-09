@@ -2,7 +2,7 @@ info.onLifeZero(function () {
 
 })
 
-//% weight=100 color=#0fbc11 icon=""
+//% weight=100 color=#BC8D15 icon=""
 namespace Solar {
     let initCredits = 0
     let ticks = 0
