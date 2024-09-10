@@ -10,7 +10,7 @@ sprites.onOverlap(SpriteKind.Sunlight, SpriteKind.SolarPanel, function (sprite, 
     sprites.destroy(sprite)
     info.changeScoreBy(1)
 })
-function startNewDay () {
+function startNewDay() {
     day += 1
     if (day > 3) {
         game.setGameOverEffect(true, effects.confetti)
@@ -18,33 +18,34 @@ function startNewDay () {
     } else if (day == 3) {
         game.showLongText("Now, you can buy a larger solar panel for 2 credits!\\n \\nPress B to switch sizes.", DialogLayout.Full)
     }
-    Solar.setupDay(day)
+    solar.setupDay(day)
     if (day == 1) {
         game.showLongText("Press A to place a solar panel to catch sunlight!\\n \\nYou have 5 credits to place 5 panels.\\n \\nHow much sunlight can you catch in 3 days?", DialogLayout.Full)
     } else {
         game.showLongText("Day " + day + "\\n \\nYou collected enough sunlight to have " + info.life() + " credits.", DialogLayout.Full)
     }
-    Solar.startDay()
+    solar.startDay()
     for (let index = 0; index < day; index++) {
-        Solar.addCloud()
+        let cloudSprite: Sprite = sprites.create(solar.cloud, SpriteKind.Cloud)
+        solar.addCloud(cloudSprite)
     }
 }
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     if (day == 3) {
-        if (placerSprite.image.equals(assets.image`smallPlacer`)) {
-            placerSprite.setImage(assets.image`largePlacer`)
+        if (shadowSprite.image.equals(solar.smallShadow)) {
+            shadowSprite.setImage(solar.largeShadow)
         } else {
-            placerSprite.setImage(assets.image`smallPlacer`)
+            shadowSprite.setImage(solar.smallShadow)
         }
     }
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (info.life() > 0 && placerSprite.image.equals(assets.image`smallPlacer`)) {
-        projectile = sprites.createProjectileFromSprite(assets.image`smallPanel`, placerSprite, 0, 0)
+    if (info.life() > 0 && shadowSprite.image.equals(solar.smallShadow)) {
+        projectile = sprites.createProjectileFromSprite(solar.smallPanel, shadowSprite, 0, 0)
         projectile.setKind(SpriteKind.SolarPanel)
         info.changeLifeBy(-1)
-    } else if (info.life() > 1 && placerSprite.image.equals(assets.image`largePlacer`)) {
-        projectile = sprites.createProjectileFromSprite(assets.image`largePanel`, placerSprite, 0, 0)
+    } else if (info.life() > 1 && shadowSprite.image.equals(solar.largeShadow)) {
+        projectile = sprites.createProjectileFromSprite(solar.largePanel, shadowSprite, 0, 0)
         projectile.setKind(SpriteKind.SolarPanel)
         info.changeLifeBy(-2)
     }
@@ -61,35 +62,35 @@ sprites.onOverlap(SpriteKind.Sunlight, SpriteKind.Cloud, function (sprite, other
         sprites.destroy(sprite)
     } else {
         sprite.setKind(SpriteKind.ReducedSunlight)
-        sprite.setImage(assets.image`reducedSunlight`)
+        sprite.setImage(solar.reducedSunlight)
     }
 })
 let sunlightSprite: Sprite = null
 let projectile: Sprite = null
 let day = 0
-let placerSprite: Sprite = null
+let shadowSprite: Sprite = null
 info.setScore(0)
 info.setLife(5)
-Solar.setInitialCredits(5)
-let heroSprite = sprites.create(assets.image`monkeyRight`, SpriteKind.Player)
+solar.setInitialCredits(5)
+let heroSprite = sprites.create(solar.playerAvatar, SpriteKind.Player)
 controller.moveSprite(heroSprite)
 heroSprite.setStayInScreen(true)
-placerSprite = sprites.create(assets.image`smallPlacer`, SpriteKind.Shadow)
-Solar.attachShadowToPlayer(placerSprite, heroSprite)
-let lawnSprite = sprites.create(assets.image`lawn`, SpriteKind.Scenery)
+shadowSprite = sprites.create(solar.smallShadow, SpriteKind.Shadow)
+solar.attachShadowToPlayer(shadowSprite, heroSprite)
+let lawnSprite = sprites.create(solar.lawn, SpriteKind.Scenery)
 lawnSprite.x = 80
 lawnSprite.top = 60
 lawnSprite.z = -1
-let sunSprite = sprites.create(assets.image`sun`, SpriteKind.Scenery)
+let sunSprite = sprites.create(solar.sun, SpriteKind.Scenery)
 sunSprite.setPosition(80, 150)
 sunSprite.z = -2
 scene.setBackgroundColor(9)
 day = 0
 startNewDay()
 game.onUpdateInterval(100, function () {
-    Solar.moveSun(sunSprite)
-    if (Solar.isSunlightMade()) {
-        sunlightSprite = sprites.createProjectileFromSprite(assets.image`sunlight`, sunSprite, 0, 100)
+    solar.moveSun(sunSprite)
+    if (solar.isSunlightMade()) {
+        sunlightSprite = sprites.createProjectileFromSprite(solar.sunlight, sunSprite, 0, 100)
         sunlightSprite.x += 8 - randint(0, 16)
         sunlightSprite.setKind(SpriteKind.Sunlight)
     }
